@@ -13,8 +13,7 @@
     "jose-chan/base-api": "^1.0",
     "firebase/php-jwt": "v5.0.*",
     "ext-json": "*",
-    "ext-curl": "*",
-    "ext-redis": "*"
+    "ext-curl": "*"
   },
   "require-dev": {
     "filp/whoops": "^2.0",
