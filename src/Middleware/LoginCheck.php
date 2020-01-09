@@ -8,15 +8,15 @@
 
 namespace JoseChan\UserLogin\Middleware;
 
-use App\AdminUser;
 use JoseChan\UserLogin\Constant\ErrorCode;
 use Illuminate\Http\Request;
+use JoseChan\UserLogin\Constants\User;
 
 class LoginCheck
 {
     public function handle(Request $request, \Closure $next, $gurad = null)
     {
-        if (!empty(AdminUser::$user)) {
+        if (!empty(User::$info)) {
             $response = $next($request);
         } else {
             return \response()->json([

@@ -1,6 +1,7 @@
 <?php
 namespace JoseChan\UserLogin\Middleware;
 
+use Illuminate\Database\Eloquent\Model;
 use JoseChan\UserLogin\Constant\ErrorCode;
 use JoseChan\UserLogin\Constant\JWTKey;
 use Firebase\JWT\JWT;
@@ -22,8 +23,10 @@ class Dispatch
                 $decoded = (array)JWT::decode($token, $config['key'], [$config['alg']]);
                 $user_id = isset($decoded['aud']) ? (string)$decoded['aud'] : 0;
                 if (!empty($user_id)) {
+                    /** @var string $user_model */
                     $user_model = $config['user_model'];
-                    $user = $user_model::where($config['primary_key'], "=", $user_id)->get();
+                    /** @var Model $user */
+                    $user = $user_model::find($user_id);
                     if (!empty($user)) {
                         User::$info = $user;
                     }
