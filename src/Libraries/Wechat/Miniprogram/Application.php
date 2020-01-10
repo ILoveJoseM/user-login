@@ -86,6 +86,10 @@ class Application
         }
     }
 
+    /**
+     * 获取授权码
+     * @return bool|string
+     */
     public function getAccessToken()
     {
         $key = "wechat:mini_program:access_token:" . $this->app_id;
@@ -101,6 +105,52 @@ class Application
         return $access_token;
     }
 
+    /**
+     * 获取小程序码
+     * @param string $scene 场景值
+     * @param string $page
+     * @param int $width
+     * @param bool $auto_color
+     * @param null $line_color
+     * @param bool $is_hyaline
+     * @return array|mixed
+     */
+    public function getWxaCodeUnLimit($scene, $page = "pages/index/index", $width = 430, $auto_color = false, $line_color = null, $is_hyaline = false)
+    {
+        $url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" . $this->getAccessToken();
+
+        if ($line_color === null) {
+            $line_color = ["r" => 0, "g" => 0, "b" => 0];
+        }
+
+        $post_data = [
+            "scene" => $scene,
+            "page" => $page,
+            "width" => $width,
+            "auto_color" => $auto_color,
+            "line_color" => $line_color,
+            "is_hyaline" => $is_hyaline
+        ];
+
+        $result = $this->curl($url, $post_data, "POST", "JSON");
+        $data = json_decode($result, true);
+        if ($data) {
+            return $data['errcode'];
+        } else {
+            return $result;
+        }
+    }
+
+    /**
+     * 发送模版消息
+     * @param $touser
+     * @param $template_id
+     * @param $from_id
+     * @param array $data
+     * @param string $page
+     * @param string $emphasis_keyword
+     * @return bool
+     */
     public function sendTemplateMsg($touser, $template_id, $from_id, $data = [], $page = "", $emphasis_keyword = "")
     {
         $url = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=" . $this->getAccessToken();
@@ -122,6 +172,11 @@ class Application
 
     }
 
+    /**
+     * 发送客服消息
+     * @param $data
+     * @return bool
+     */
     public function sendCustomerMsg($data)
     {
         $url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" . $this->getAccessToken();
@@ -134,6 +189,11 @@ class Application
         }
     }
 
+    /**
+     * 上传图片
+     * @param \CURLFile $file
+     * @return mixed
+     */
     public function uploadImage(\CURLFile $file)
     {
         $url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=" . $this->getAccessToken() . "&type=image";
@@ -149,6 +209,11 @@ class Application
         return $data;
     }
 
+    /**
+     * 获取sessionkey
+     * @param $code
+     * @return mixed
+     */
     private function getSessionKey($code)
     {
         $url = "https://api.weixin.qq.com/sns/jscode2session?appid={$this->app_id}&secret={$this->app_secret}&js_code={$code}&grant_type=authorization_code";
