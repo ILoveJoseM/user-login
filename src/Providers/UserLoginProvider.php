@@ -12,6 +12,7 @@ namespace JoseChan\UserLogin\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use JoseChan\UserLogin\Middleware\Dispatch;
+use JoseChan\UserLogin\Middleware\JWTDispatch;
 use JoseChan\UserLogin\Middleware\LoginCheck;
 
 class UserLoginProvider extends ServiceProvider
@@ -33,6 +34,7 @@ class UserLoginProvider extends ServiceProvider
     {
         Route::aliasMiddleware("dispatch", Dispatch::class);
         Route::aliasMiddleware("login.check", LoginCheck::class);
+        Route::aliasMiddleware("jwt.dispatch", JWTDispatch::class);
         Route::namespace($this->namespace)
             ->group(__DIR__ . "/../../routes/routes.php");
 
