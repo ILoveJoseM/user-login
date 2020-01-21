@@ -12,4 +12,6 @@ namespace JoseChan\UserLogin\Constants;
 class User
 {
     public static $info = null;
+
+    public static $extra = null
 }
