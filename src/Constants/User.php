@@ -13,5 +13,5 @@ class User
 {
     public static $info = null;
 
-    public static $extra = null
+    public static $extra = null;
 }
