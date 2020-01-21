@@ -54,7 +54,7 @@ class Prpcrypt
 
     public function decrypt($aesCipher, $aesIV)
     {
-        $decrypted = openssl_decrypt($aesCipher, 'AES-256-CBC', $this->key, OPENSSL_RAW_DATA, $aesIV);
+        $decrypted = openssl_decrypt($aesCipher, 'AES-128-CBC', $this->key, OPENSSL_RAW_DATA, $aesIV);
         return $decrypted;
     }
 
