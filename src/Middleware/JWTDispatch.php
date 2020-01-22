@@ -34,7 +34,7 @@ class JWTDispatch
             try {
                 $decoded = (array)JWT::decode($token, $config['key'], [$config['alg']]);
                 $user_id = isset($decoded['aud']) ? (string)$decoded['aud'] : 0;
-                $extra = isset($decoded['data']) ? (string)$decoded['data'] : [];
+                $extra = isset($decoded['data']) ? (array)$decoded['data'] : [];
                 if (!empty($user_id)) {
                     /** @var string $user_model */
                     $user_model = $config['user_model'];
