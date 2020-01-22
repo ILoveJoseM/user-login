@@ -54,8 +54,13 @@ class Prpcrypt
 
     public function decrypt($aesCipher, $aesIV)
     {
-        $decrypted = openssl_decrypt($aesCipher, 'AES-128-CBC', $this->key, OPENSSL_RAW_DATA, $aesIV);
-        return $decrypted;
+        try{
+            $decrypted = openssl_decrypt($aesCipher, 'AES-128-CBC', $this->key, OPENSSL_RAW_DATA, $aesIV);
+        }catch (\Exception $exception){
+            return [ErrorCode::$IllegalBuffer, null];
+        }
+
+        return [0, $decrypted];
     }
 
 }
