@@ -26,7 +26,7 @@ class Dispatch
                 if (!empty($user_id)) {
                     /** @var string $user_model */
                     $user_model = $config['user_model'];
-                    if($user_model instanceof Model){
+                    if((new $user_model()) instanceof Model){
                         /** @var Model $user */
                         $user = $user_model::find($user_id);
                         if (!empty($user)) {
