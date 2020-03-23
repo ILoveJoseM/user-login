@@ -20,10 +20,9 @@ class LoginCheck
             $response = $next($request);
         } else {
             return \response()->json([
-                ErrorCode::msg(ErrorCode::USER_NOT_LOGIN),
-                ErrorCode::USER_NOT_LOGIN,
-                [],
-                200
+                "msg" => ErrorCode::msg(ErrorCode::USER_NOT_LOGIN),
+                "code" => ErrorCode::USER_NOT_LOGIN,
+                "data" => [],
             ]);
         }
 
