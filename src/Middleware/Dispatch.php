@@ -1,6 +1,8 @@
 <?php
+
 namespace JoseChan\UserLogin\Middleware;
 
+use Firebase\JWT\ExpiredException;
 use Illuminate\Database\Eloquent\Model;
 use JoseChan\UserLogin\Constant\ErrorCode;
 use JoseChan\UserLogin\Constant\JWTKey;
@@ -35,6 +37,13 @@ class Dispatch
                         }
                     }
                 }
+            } catch (ExpiredException $exception) {
+                return \response()->json([
+                    "msg" => ErrorCode::msg(ErrorCode::USER_NOT_LOGIN),
+                    "code" => ErrorCode::USER_NOT_LOGIN,
+                    "data" => [],
+                ]);
+
             } catch (\Exception $e) {
                 User::$info = null;
             }
@@ -44,7 +53,7 @@ class Dispatch
             $response = $next($request);
         } catch (\Exception $e) {
             $response = response()->json([
-                "msg" => ErrorCode::msg(ErrorCode::SYSTEM_ERROR), "code"=>ErrorCode::SYSTEM_ERROR, "data"=>[]
+                "msg" => ErrorCode::msg(ErrorCode::SYSTEM_ERROR), "code" => ErrorCode::SYSTEM_ERROR, "data" => []
             ]);
         }
 

@@ -17,8 +17,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use JoseChan\Base\Api\Controllers\Controller;
 use JoseChan\UserLogin\Constant\ErrorCode;
+use JoseChan\UserLogin\Handler\Login;
 use JoseChan\UserLogin\Libraries\Wechat\MiniProgram\Application;
 use JoseChan\UserLogin\Libraries\Wechat\Miniprogram\RegisterHandler\AbstractHandler;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserLoginController extends Controller
 {
@@ -26,41 +28,14 @@ class UserLoginController extends Controller
     /**
      * 用户密码登录
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return Response
+     * @throws \Exception
      */
     public function login(Request $request)
     {
-        $credentials = $request->only(['username', 'password']);
-
-        /** @var \Illuminate\Validation\Validator $validator */
-        $validator = Validator::make($credentials, [
-            'username' => 'required',
-            'password' => 'required',
-        ]);
-
-        if ($validator->fails()) {//登录失败
-            return $this->response([], ErrorCode::LOGIN_FAIL, ErrorCode::msg(ErrorCode::LOGIN_FAIL));
-        }
-
-        $config = JWTKey::getConfigs();
-        /** @var Model $user_model */
-        $user_model = $config['user_model'];
-
-        if (Auth::guard('admin')->attempt($credentials)) {//登录成功
-
-            $user = $user_model::where("username", "=", $request->get("username"))->first();
-
-            $user_id = $user ? $user->getKey() : null;
-
-            if(!$user_id)
-            {
-                return $this->response([], ErrorCode::USER_NOT_FOUND, ErrorCode::msg(ErrorCode::USER_NOT_FOUND));
-            }
-
-            return $this->response(["token" => $this->generateJWT($user_id)], ErrorCode::SUCCESS, ErrorCode::msg(ErrorCode::SUCCESS));
-        }
-
-        return $this->response([], ErrorCode::LOGIN_FAIL, ErrorCode::msg(ErrorCode::LOGIN_FAIL));
+        $login_type = $request->get("login_type", "account");
+        $response = Login::login($login_type, $request->all());
+        return $response;
     }
 
     /**
@@ -105,7 +80,7 @@ class UserLoginController extends Controller
         $user_id = $user ? $user->getKey() : null;
 
         //没有则注册
-        if(!$user_id){
+        if (!$user_id) {
             $register_handler = $config['mini_program']['register_handler'];
 
             /** @var AbstractHandler $handler */
@@ -114,8 +89,7 @@ class UserLoginController extends Controller
             $result = $handler->handler($info);
 
             //注册不成功，返回失败
-            if(!$result)
-            {
+            if (!$result) {
                 return $this->response([], ErrorCode::LOGIN_FAIL, ErrorCode::msg(ErrorCode::LOGIN_FAIL));
             }
 

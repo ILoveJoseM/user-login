@@ -19,6 +19,7 @@ class ErrorCode
     const PARAMS_ERROR = -1;
     const SYSTEM_ERROR = -2;
     const LOGIN_FAIL = 1000;
+    const REGISTER_FAIL = 1001;
     const USER_NOT_LOGIN = 1002;
     const FORBIDDEN = 1003;
     const USER_NOT_FOUND = 1004;
@@ -30,6 +31,7 @@ class ErrorCode
         self::PARAMS_ERROR => ["参数错误", Response::HTTP_OK],
         self::SYSTEM_ERROR => ["系统错误", Response::HTTP_OK],
         self::LOGIN_FAIL => ["登录失败", Response::HTTP_BAD_REQUEST],
+        self::REGISTER_FAIL => ["生成用户失败", Response::HTTP_BAD_REQUEST],
         self::USER_NOT_FOUND => ["用户不存在", Response::HTTP_BAD_REQUEST],
         self::USER_NOT_LOGIN => ["未登录", Response::HTTP_BAD_REQUEST],
         self::FORBIDDEN => ["无权限操作", Response::HTTP_BAD_REQUEST],
