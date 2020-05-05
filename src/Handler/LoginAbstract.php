@@ -15,6 +15,11 @@ use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
 use JoseChan\UserLogin\Constant\ErrorCode;
 
+/**
+ * 所有登录扩展都要继承该类
+ * Class LoginAbstract
+ * @package JoseChan\UserLogin\Handler
+ */
 abstract class LoginAbstract implements LoginInterface
 {
     /** @var bool $auto_register */
@@ -31,6 +36,10 @@ abstract class LoginAbstract implements LoginInterface
     }
 
 
+    /**
+     * 注册失败处理
+     * @return Response
+     */
     public function failsRegisterHandler(): Response
     {
         return \response()->json([
@@ -40,6 +49,10 @@ abstract class LoginAbstract implements LoginInterface
         ]);
     }
 
+    /**
+     * 登录失败处理
+     * @return Response
+     */
     public function failsLoginHandler(): Response
     {
         return \response()->json([
@@ -49,6 +62,11 @@ abstract class LoginAbstract implements LoginInterface
         ]);
     }
 
+    /**
+     * 注册成功处理
+     * @param Model $user
+     * @return Response
+     */
     public function successRegisterHandler(Model $user): Response
     {
         return \response()->json([
@@ -60,6 +78,11 @@ abstract class LoginAbstract implements LoginInterface
         ]);
     }
 
+    /**
+     * 登录成功处理
+     * @param Model $user
+     * @return Response
+     */
     public function successLoginHandler(Model $user): Response
     {
         return \response()->json([
@@ -71,6 +94,11 @@ abstract class LoginAbstract implements LoginInterface
         ]);
     }
 
+    /**
+     * 获取登录数据
+     * @param array $form
+     * @return array
+     */
     public function getLoginData(array $form): array
     {
         return $form;

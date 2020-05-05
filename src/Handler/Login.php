@@ -12,6 +12,11 @@ namespace JoseChan\UserLogin\Handler;
 use Illuminate\Support\Facades\Validator;
 use JoseChan\UserLogin\Handler\Gateway\AccountLogin;
 
+/**
+ * 登录门面
+ * Class Login
+ * @package JoseChan\UserLogin\Handler
+ */
 class Login
 {
     protected static $extend = [

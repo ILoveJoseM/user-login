@@ -15,9 +15,22 @@ use Illuminate\Support\Facades\Auth;
 use JoseChan\UserLogin\Handler\LoginAbstract;
 use JoseChan\UserLogin\Models\Users;
 
+/**
+ * 账密登录
+ * Class AccountLogin
+ * @package JoseChan\UserLogin\Handler\Gateway
+ */
 class AccountLogin extends LoginAbstract
 {
 
+    //不自动注册
+    protected $auto_register = false;
+
+    /**
+     * 登录逻辑
+     * @param array $form
+     * @return Model
+     */
     public function login(array $form): Model
     {
         if (Auth::guard('web')->attempt($form)) {//登录成功
@@ -30,6 +43,11 @@ class AccountLogin extends LoginAbstract
         return new Users();
     }
 
+    /**
+     * 注册逻辑
+     * @param array $form
+     * @return Model
+     */
     public function register(array $form): Model
     {
         // TODO: Implement register() method.
