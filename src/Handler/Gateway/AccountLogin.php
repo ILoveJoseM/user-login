@@ -8,13 +8,9 @@
 
 namespace JoseChan\UserLogin\Handler\Gateway;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Auth;
 use JoseChan\UserLogin\Handler\LoginAbstract;
-use JoseChan\UserLogin\Models\Users;
 
 /**
  * 账密登录
@@ -112,11 +108,6 @@ class AccountLogin extends LoginAbstract
 
         throw new \Exception("注册失败");
 
-    }
-
-    public function userInfo(): Model
-    {
-        // TODO: Implement userInfo() method.
     }
 
     public function loginValidate(): array

@@ -34,12 +34,6 @@ interface LoginInterface
     public function register(array $form):Model;
 
     /**
-     * 获取用户信息
-     * @return Model
-     */
-    public function userInfo():Model;
-
-    /**
      * 注册失败处理
      * @return Response
      */
