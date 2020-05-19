@@ -73,7 +73,7 @@ abstract class LoginAbstract implements LoginInterface
             "code" => 1,
             "msg" => "success",
             "data" => [
-                "token" => $this->generateJWT($user->id)
+                "token" => $this->generateJWT($user->getKey())
             ],
         ]);
     }
@@ -89,7 +89,7 @@ abstract class LoginAbstract implements LoginInterface
             "code" => 1,
             "msg" => "success",
             "data" => [
-                "token" => $this->generateJWT($user->id)
+                "token" => $this->generateJWT($user->getKey())
             ],
         ]);
     }
@@ -130,4 +130,7 @@ abstract class LoginAbstract implements LoginInterface
 
         return JWT::encode($token, $config['key'], $config['alg']);
     }
+
+
+
 }

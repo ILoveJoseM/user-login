@@ -10,6 +10,7 @@ namespace JoseChan\UserLogin\Handler;
 
 
 use Illuminate\Support\Facades\Validator;
+use JoseChan\UserLogin\Constant\ErrorCode;
 use JoseChan\UserLogin\Handler\Gateway\AccountLogin;
 
 /**
@@ -34,26 +35,32 @@ class Login
      */
     public static function login($login_style = "account", $form = [])
     {
-        $gateway = self::makeGateway($login_style);
+        try{
+            $gateway = self::makeGateway($login_style);
 
-        /** @var \Illuminate\Validation\Validator $validator */
-        $validator = Validator::make($gateway->getLoginData($form), $gateway->loginValidate());
+            /** @var \Illuminate\Validation\Validator $validator */
+            $form = $gateway->getLoginData($form);
+            $validator = Validator::make($form, $gateway->loginValidate());
 
-        if ($validator->fails()) {//登录失败
-            throw new \Exception("登录参数不正确");
+            if ($validator->fails()) {//登录失败
+                throw new \Exception("登录参数不正确");
+            }
+
+            $user = $gateway->login($form);
+
+            if ($user && $user->exists) {
+                return $gateway->successLoginHandler($user);
+            }
+
+            if ($gateway->autoRegister()) {
+                return self::register($login_style, $form);
+            } else {
+                return $gateway->failsLoginHandler();
+            }
+        }catch (\Exception $exception){
+            return self::handleException($exception);
         }
 
-        $user = $gateway->login($form);
-
-        if ($user->exists) {
-            return $gateway->successLoginHandler($user);
-        }
-
-        if ($gateway->autoRegister()) {
-            return self::register($login_style, $form);
-        } else {
-            return $gateway->failsLoginHandler();
-        }
     }
 
     /**
@@ -65,23 +72,27 @@ class Login
      */
     public static function register($login_style = "account", $form = [])
     {
+        try{
+            $gateway = self::makeGateway($login_style);
 
-        $gateway = self::makeGateway($login_style);
+            /** @var \Illuminate\Validation\Validator $validator */
+            $form = $gateway->getRegisterData($form);
+            $validator = Validator::make($form, $gateway->registerValidate());
 
-        /** @var \Illuminate\Validation\Validator $validator */
-        $validator = Validator::make($gateway->getRegisterData($form), $gateway->registerValidate());
+            if ($validator->fails()) {//登录失败
+                throw new \Exception("注册参数不正确");
+            }
 
-        if ($validator->fails()) {//登录失败
-            throw new \Exception("注册参数不正确");
+            $user = $gateway->register($form);
+
+            if ($user && $user->exists) {
+                return $gateway->successRegisterHandler($user);
+            }
+
+            return $gateway->failsRegisterHandler();
+        }catch (\Exception $exception){
+            return self::handleException($exception);
         }
-
-        $user = $gateway->register($form);
-
-        if ($user->exists) {
-            return $gateway->successRegisterHandler($user);
-        }
-
-        return $gateway->failsRegisterHandler();
     }
 
     /**
@@ -110,5 +121,19 @@ class Login
     public static function extend($name, $class_name)
     {
         self::$extend[$name] = $class_name;
+    }
+
+    /**
+     * 异常处理
+     * @param \Exception $exception
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected static function handleException(\Exception $exception)
+    {
+        return \response()->json([
+            "code" => $exception->getCode() == 0 ? ErrorCode::SYSTEM_ERROR : $exception->getCode(),
+            "msg" => $exception->getMessage(),
+            "data" => [],
+        ]);
     }
 }

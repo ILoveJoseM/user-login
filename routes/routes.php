@@ -20,5 +20,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('/login', 'UserLoginController@login');
-Route::post('/login/wxapp', 'UserLoginController@Wxapp');
+Route::post('/register', 'UserLoginController@register');
 
