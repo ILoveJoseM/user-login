@@ -22,5 +22,6 @@ class UserProfile extends Model
         "province",
         "headimgurl",
         "channel_id",
+        "phone",
     ];
 }

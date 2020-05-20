@@ -76,6 +76,7 @@ class AccountLogin extends LoginAbstract
             "country" => "",
             "province" => "",
             "headimgurl" => "",
+            "phone" => "",
             "channel_id" => isset($form['channel_id']) ? $form['channel_id'] : 0,
         ];
 
