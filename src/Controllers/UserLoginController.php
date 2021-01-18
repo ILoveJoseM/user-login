@@ -52,8 +52,7 @@ class UserLoginController extends Controller
 
             $user_id = $user ? $user->getKey() : null;
 
-            if(!$user_id)
-            {
+            if (!$user_id) {
                 return $this->response([], ErrorCode::USER_NOT_FOUND, ErrorCode::msg(ErrorCode::USER_NOT_FOUND));
             }
 
@@ -100,12 +99,40 @@ class UserLoginController extends Controller
         //获取用户表中的信息
         /** @var Model $user_model */
         $user_model = $config['jwt']['user_model'];
-        $user = $user_model::where("open_id", "=", $info['openid'])->first();
+        if (isset($info['unionid'])) {
+            //有unionid按unionid查
+            /** @var Model $user */
+            $user = $user_model::where("union_id", "=", $info['unionid'])->first();
+            //查不出来
+            if (empty($user) || !$user->exists) {
+                //再用openid查
+                /** @var Model $user */
+                $user = $user_model::where("open_id", "=", $info['openid'])->first();
+                if (!empty($user) && $user->exists) {
+                    //查到了更新
+                    $user->union_id = $info['unionid'];
+                    $user->save();
+                }
+            }
+        } else {
+            $user = $user_model::where("open_id", "=", $info['openid'])->first();
+            //查不出来
+            if (empty($user) || !$user->exists) {
+                //再用unionid查
+                /** @var Model $user */
+                $user = $user_model::where("union_id", "=", $info['unionid'])->first();
+                if (!empty($user) && $user->exists) {
+                    //查到了更新
+                    $user->open_id = $info['openid'];
+                    $user->save();
+                }
+            }
+        }
 
         $user_id = $user ? $user->getKey() : null;
 
         //没有则注册
-        if(!$user_id){
+        if (!$user_id) {
             $register_handler = $config['mini_program']['register_handler'];
 
             /** @var AbstractHandler $handler */
@@ -114,8 +141,7 @@ class UserLoginController extends Controller
             $result = $handler->handler($info);
 
             //注册不成功，返回失败
-            if(!$result)
-            {
+            if (!$result) {
                 return $this->response([], ErrorCode::LOGIN_FAIL, ErrorCode::msg(ErrorCode::LOGIN_FAIL));
             }
 
