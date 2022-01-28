@@ -50,7 +50,7 @@ class UserLoginController extends Controller
         if (Auth::guard('admin')->attempt($credentials)) {//登录成功
 
             /** @var UserModelInterface|Model $user */
-            $user = $user_model::where("username", "=", $request->get("username"))->first();
+            $user = $user_model::query()->where("username", "=", $request->get("username"))->first();
 
             $user_id = $user ? $user->getKey() : null;
 

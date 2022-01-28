@@ -7,6 +7,7 @@ use JoseChan\UserLogin\Constant\JWTKey;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use JoseChan\UserLogin\Constants\User;
+use JoseChan\UserLogin\Models\UserModelInterface;
 
 class Dispatch
 {
@@ -26,7 +27,7 @@ class Dispatch
                 if (!empty($user_id)) {
                     /** @var string $user_model */
                     $user_model = $config['user_model'];
-                    /** @var Model $user */
+                    /** @var Model|UserModelInterface $user */
                     $user = $user_model::find($user_id);
                     if (!empty($user)) {
                         User::$info = $user;

@@ -18,6 +18,8 @@ namespace JoseChan\UserLogin\Models;
  * @property string $password
  * @property string $union_id
  * @property string $open_id
+ * @property string $created_at
+ * @property string $updated_at
  */
 interface UserModelInterface
 {

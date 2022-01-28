@@ -11,6 +11,7 @@ namespace JoseChan\UserLogin\Libraries\Wechat\Miniprogram\RegisterHandler;
 
 use Illuminate\Database\Eloquent\Model;
 use JoseChan\UserLogin\Constant\JWTKey;
+use JoseChan\UserLogin\Models\UserModelInterface;
 
 class RegisterHandler extends AbstractHandler
 {
@@ -20,14 +21,14 @@ class RegisterHandler extends AbstractHandler
         $config = JWTKey::getConfigs();
         $model = $config['user_model'];
 
-        /** @var Model $user */
+        /** @var Model|UserModelInterface $user */
         $user = new $model();
 
-        $user->openid = $user_info['openid'];
+        $user->open_id = $user_info['openid'];
         if($user->save()){
             return $user;
         }
-        
+
         return false;
 
     }
