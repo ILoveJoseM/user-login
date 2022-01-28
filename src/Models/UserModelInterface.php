@@ -2,17 +2,16 @@
 /**
  * Created by PhpStorm.
  * User: chenyu
- * Date: 2020-01-03
- * Time: 17:43
+ * Date: 2022-01-28
+ * Time: 11:40
  */
 
 namespace JoseChan\UserLogin\Models;
 
 
-use Illuminate\Database\Eloquent\Model;
-
 /**
- * Class Users
+ * Interface UserModelInterface
+ * @package JoseChan\UserLogin\Models
  * @package JoseChan\UserLogin\Models
  * @property int $id
  * @property string $username
@@ -20,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $union_id
  * @property string $open_id
  */
-class Users extends Model implements UserModelInterface
+interface UserModelInterface
 {
 
 }

@@ -19,6 +19,7 @@ use JoseChan\Base\Api\Controllers\Controller;
 use JoseChan\UserLogin\Constant\ErrorCode;
 use JoseChan\UserLogin\Libraries\Wechat\MiniProgram\Application;
 use JoseChan\UserLogin\Libraries\Wechat\Miniprogram\RegisterHandler\AbstractHandler;
+use JoseChan\UserLogin\Models\UserModelInterface;
 
 class UserLoginController extends Controller
 {
@@ -48,6 +49,7 @@ class UserLoginController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials)) {//登录成功
 
+            /** @var UserModelInterface|Model $user */
             $user = $user_model::where("username", "=", $request->get("username"))->first();
 
             $user_id = $user ? $user->getKey() : null;
@@ -101,12 +103,12 @@ class UserLoginController extends Controller
         $user_model = $config['jwt']['user_model'];
         if (isset($info['unionid'])) {
             //有unionid按unionid查
-            /** @var Model $user */
+            /** @var Model|UserModelInterface $user */
             $user = $user_model::where("union_id", "=", $info['unionid'])->first();
             //查不出来
             if (empty($user) || !$user->exists) {
                 //再用openid查
-                /** @var Model $user */
+                /** @var Model|UserModelInterface $user */
                 $user = $user_model::where("open_id", "=", $info['openid'])->first();
                 if (!empty($user) && $user->exists) {
                     //查到了更新
@@ -115,11 +117,12 @@ class UserLoginController extends Controller
                 }
             }
         } else {
+            /** @var Model|UserModelInterface $user */
             $user = $user_model::where("open_id", "=", $info['openid'])->first();
             //查不出来
             if (empty($user) || !$user->exists) {
                 //再用unionid查
-                /** @var Model $user */
+                /** @var Model|UserModelInterface $user */
                 $user = $user_model::where("union_id", "=", $info['unionid'])->first();
                 if (!empty($user) && $user->exists) {
                     //查到了更新
