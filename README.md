@@ -12,6 +12,13 @@ composer require "jose-chan/user-login" -vvv
 php artisan vendor:publish --tag=user-login
 ````
 
+## 表结构导入
+
+``
+php artisan migrate --path=vendor/jose-chan/user-login/database/migrations
+``
+
+
 ## 使用
 
 默认路由是:
